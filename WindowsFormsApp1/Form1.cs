@@ -147,7 +147,7 @@ namespace WindowsFormsApp1
                             {
                                 m_jpegFiles++;
                             }
-                            //Response.Write(theFileInfo.Name.ToString() + "<BR>");
+                            //Response.Write(theFileInfo.Name.ToString() + "<BR>");  123
                         }
                     }
 
@@ -178,7 +178,7 @@ namespace WindowsFormsApp1
 
                 try
                 {
-                    //find how many jpeg files
+                    //find how many jpeg files 
                     {
                         m_jpegFiles = 0;
                         //files

@@ -134,16 +134,17 @@ namespace WindowsFormsApp1
                     }
 
                     //files
+                    string search_type = ".jpg";
                     {
                         String FilePath = textBox_curDir.Text;
                         FileInfo theFileInfo;
                         FileCollection = Directory.GetFiles(FilePath);
-
+                       
                         for (int i = 0; i < FileCollection.Length; i++)
                         {
 
                             theFileInfo = new FileInfo(FileCollection[i]);
-                            if(theFileInfo.Extension.ToLower() == ".jpg")
+                            if(theFileInfo.Extension.ToLower() == search_type)
                             {
                                 m_jpegFiles++;
                             }

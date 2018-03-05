@@ -165,13 +165,13 @@ namespace WindowsFormsApp1
                     //files
                     string search_type = ".jpg";
                     String FilePath = textBox_curDir.Text;
-                    int ijpeg_fileNum = 0;
+                    ijpeg_fileNum = 0;
                     ijpeg_fileNum = FindFiles(out FileCollection, FilePath, search_type);
 
-                    int imov_filenum = 0;
+                    imov_filenum = 0;
                     imov_filenum = FindFiles(out FileCollection, FilePath, ".mov");
 
-                    int ipng_filenum = 0;
+                    ipng_filenum = 0;
                     ipng_filenum = FindFiles(out FileCollection, FilePath, ".png");
 
 
@@ -228,7 +228,7 @@ namespace WindowsFormsApp1
 
                 if (false == System.IO.File.Exists(copyDir_fullPath))
                 {
-                    System.IO.File.Copy(theFileInfo.FullName, copyDir_fullPath);
+                    System.IO.File.Move(theFileInfo.FullName, copyDir_fullPath);
                 }
             }
             catch (Exception j)
@@ -300,7 +300,7 @@ namespace WindowsFormsApp1
                                 if (false == bProcessFile) continue;
 
                                 {
-                                     MoveByModifiedTime(theFileInfo, ref MonthMap, left_files);
+                                     MoveByModifiedTime(theFileInfo, ref MonthMap, ref left_files);
 
                                 }
 
@@ -361,7 +361,8 @@ namespace WindowsFormsApp1
                                 //choose by modified time
                                 if (false ==  bIfFoundPhotoTime )
                                 {
-                                    return;
+                                    MoveByModifiedTime(theFileInfo, ref MonthMap, ref left_files);
+                                    continue;
                                 }
                                 else {
                                     string copyDir_fullPath = "";
@@ -384,6 +385,8 @@ namespace WindowsFormsApp1
                                         System.IO.Directory.CreateDirectory(Month_fullPath);
                                     }
                                     copyDir_fullPath = Month_fullPath + "\\"+ theFileInfo.Name;
+                                    string src_path = theFileInfo.FullName;
+                                    string src_name = theFileInfo.Name;
                                     //move to the directory
                                     try
                                     {
@@ -391,11 +394,13 @@ namespace WindowsFormsApp1
                                         image = null;
                                         if (false == System.IO.File.Exists(copyDir_fullPath))
                                         {
-                                            System.IO.File.Copy(theFileInfo.FullName, copyDir_fullPath);
+                                            
+                                            theFileInfo = null;
+                                            System.IO.File.Move(src_path, copyDir_fullPath);
                                         }
                                     }catch(Exception j)
                                     {
-                                        text_Error_file.Text += theFileInfo.Name +":"+ j.Message + "\n";
+                                        text_Error_file.Text += src_name + ":"+ j.Message + "\n";
                                         int g1 = 0;
                                         g1++;
                                     }

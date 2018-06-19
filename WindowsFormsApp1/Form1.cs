@@ -125,7 +125,9 @@ namespace WindowsFormsApp1
         int ijpeg_fileNum = 0;
         int imov_filenum = 0;
         int ipng_filenum = 0;
-      
+        int imp4_filenum = 0;
+
+
 
         private int FindFiles(out String[] FileCollection, String FilePath, string search_type)
         {
@@ -191,10 +193,14 @@ namespace WindowsFormsApp1
                     ipng_filenum = 0;
                     ipng_filenum = FindFiles(out FileCollection, FilePath, ".png");
 
+                    imp4_filenum = 0;
+                    imp4_filenum = FindFiles(out FileCollection, FilePath, ".mp4");
 
 
 
-                    textBox_ouput.Text = "當前目錄:" + dirs.Count.ToString() + " 檔案:" + FileCollection.Length.ToString() +"jpg :" + ijpeg_fileNum + "mov:" + imov_filenum + "png:" + ipng_filenum;
+
+                    textBox_ouput.Text = "當前目錄:" + dirs.Count.ToString() + " 檔案:" + FileCollection.Length.ToString() +"jpg :" 
+                        + ijpeg_fileNum + "mov:" + imov_filenum + "png:" + ipng_filenum + "mp4:" + imp4_filenum ;
                 }
                 catch (UnauthorizedAccessException UAEx)
                 {
@@ -269,6 +275,25 @@ namespace WindowsFormsApp1
                 if (false == System.IO.File.Exists(copyDir_fullPath))
                 {
                     System.IO.File.Move(theFileInfo.FullName, copyDir_fullPath);
+                }
+                else//identical file, we rename
+                {
+                    string DstFileName;
+                     string[] file = theFileInfo.Name.Split('.');
+                    //  DstFileName = file[0] + "_" + dirName[dirName.Length - 1] + "." + file[1];
+                    int j = 0;
+                    for (j = 0; j < 99; j++)
+                    {
+                        DstFileName = file[0] + "_" + j + "." + file[1];
+                      
+                        copyDir_fullPath = Month_fullPath + "\\" + DstFileName;
+                        if (false == File.Exists(copyDir_fullPath))
+                        {
+                            System.IO.File.Move(theFileInfo.FullName, copyDir_fullPath);
+                            break;
+                        }
+                    }
+
                 }
             }
             catch (Exception j)
@@ -386,6 +411,10 @@ namespace WindowsFormsApp1
                                 {
                                     bProcessFile = true;
                                 }
+                                else if (theFileInfo.Extension.ToLower() == ".mp4".ToLower())
+                                {
+                                    bProcessFile = true;
+                                }
 
                                 if (false == bProcessFile) continue;
 
@@ -408,6 +437,7 @@ namespace WindowsFormsApp1
 
                             theFileInfo = new FileInfo(FileCollection[i]);
                             if(theFileInfo.Extension.ToLower() == ".jpg")
+                            try 
                             {
                               
                                 // Create an Image object. 
@@ -510,7 +540,27 @@ namespace WindowsFormsApp1
                                            // theFileInfo = null;
                                             System.IO.File.Move(src_path, copyDir_fullPath);
                                         }
-                                    }catch(Exception j)
+                                        else
+                                        {
+                                            string DstFileName;
+                                            string[] file = theFileInfo.Name.Split('.');
+                                            //  DstFileName = file[0] + "_" + dirName[dirName.Length - 1] + "." + file[1];
+                                            int j = 0;
+                                            for (j = 0; j < 99; j++)
+                                            {
+                                                DstFileName = file[0] + "_" + j + "." + file[1];
+
+                                                copyDir_fullPath = Month_fullPath + "\\" + DstFileName;
+                                                if (false == File.Exists(copyDir_fullPath))
+                                                {
+                                                    System.IO.File.Move(theFileInfo.FullName, copyDir_fullPath);
+                                                    break;
+                                                }
+                                            }
+
+                                        }
+                                    }
+                                    catch(Exception j)
                                     {
                                         text_Error_file.Text += src_name + ":"+ j.Message + "\n";
                                         int g1 = 0;
@@ -526,7 +576,16 @@ namespace WindowsFormsApp1
                                 g++;
 
                             }
-                            //Response.Write(theFileInfo.Name.ToString() + "<BR>");
+                                //Response.Write(theFileInfo.Name.ToString() + "<BR>");
+                              catch(ArgumentException e1)
+                                {
+                                    int g = 0;
+
+                                    text_Error_file.Text += theFileInfo.FullName + ":" + e1.Message + "\n";
+
+                                    left_files--;
+                                    textBox_ouput.Text = "剩下檔案:" + left_files;
+                                }
                         }
                     }
 

@@ -13,6 +13,7 @@ using System.Threading;
 
 namespace WindowsFormsApp1
 {
+    //test by terry
     enum enSortType { enSortByMonth, enSortByDay };
 
     public partial class Form1 : Form
